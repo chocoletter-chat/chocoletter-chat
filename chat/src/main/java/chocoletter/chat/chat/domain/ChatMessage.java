@@ -13,13 +13,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ChatMessage {
     @Id
     private String id;
+    private String roomId;
     private Long senderId;
     private String content;
     private LocalDateTime createdAt;
     private Boolean read;
 
     @Builder
-    public ChatMessage(Long senderId, String content) {
+    public ChatMessage(String roomId, Long senderId, String content) {
+        this.roomId = roomId;
         this.senderId = senderId;
         this.content = content;
         this.createdAt = LocalDateTime.now();

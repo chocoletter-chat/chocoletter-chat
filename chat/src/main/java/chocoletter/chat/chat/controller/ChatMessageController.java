@@ -18,6 +18,7 @@ public class ChatMessageController {
     @PostMapping("/")
     public ResponseEntity<?> sendMessage(@RequestBody ChatMessageRequestDto chatMessage) {
         chatMessageService.saveChatMessage(ChatMessage.builder()
+                .roomId(chatMessage.getRoomId())
                 .content(chatMessage.getContent())
                 .senderId(chatMessage.getSenderId())
                 .build());
