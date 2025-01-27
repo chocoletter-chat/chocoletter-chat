@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017" # MongoDB 포트 매핑
+    volumes:
+      - mongodb-data:/data/db # 데이터를 영구적으로 저장
+    networks:
+      - app-network
+
+  spring-boot-app:
+    build:
+      context: . # 현재 디렉터리의 Dockerfile 사용
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080" # 애플리케이션 포트 매핑
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev # Spring Boot 프로필 설정
+    depends_on:
+      - mongodb # MongoDB 컨테이너가 먼저 실행되도록 설정
+    networks:
+      - app-network
+
+volumes:
+  mongodb-data: # MongoDB 데이터 영구 저장소
+
+networks:
+  app-network: # 두 컨테이너가 사용할 네트워크
