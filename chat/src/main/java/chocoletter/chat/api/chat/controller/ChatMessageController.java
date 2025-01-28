@@ -1,8 +1,8 @@
-package chocoletter.chat.chat.controller;
+package chocoletter.chat.api.chat.controller;
 
-import chocoletter.chat.chat.domain.ChatMessage;
-import chocoletter.chat.chat.dto.ChatMessageRequestDto;
-import chocoletter.chat.chat.service.ChatMessageService;
+import chocoletter.chat.api.chat.domain.ChatMessage;
+import chocoletter.chat.api.chat.dto.request.ChatMessageRequestDto;
+import chocoletter.chat.api.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

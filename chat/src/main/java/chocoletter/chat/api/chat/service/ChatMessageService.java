@@ -1,7 +1,7 @@
-package chocoletter.chat.chat.service;
+package chocoletter.chat.api.chat.service;
 
-import chocoletter.chat.chat.domain.ChatMessage;
-import chocoletter.chat.chat.repository.ChatMessageRepository;
+import chocoletter.chat.api.chat.domain.ChatMessage;
+import chocoletter.chat.api.chat.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
