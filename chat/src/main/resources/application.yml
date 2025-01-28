@@ -1,4 +1,3 @@
 spring:
-  config:
-    activate:
-      on-profile: local
+  profiles:
+    active: local # 기본은 local

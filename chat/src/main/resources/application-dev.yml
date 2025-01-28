@@ -4,9 +4,20 @@ spring:
       on-profile: dev
   data:
     mongodb:
-      uri: mongodb://mongodb:27017/chatdb
+      uri: mongodb://mongodb:27017/chatdb # MongoDB 컨테이너 이름으로 연결
 
-  kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      group-id: chat-group
+kafka:
+  bootstrap-servers: kafka:9092 # Kafka 컨테이너 이름으로 연결
+  topic:
+    chat: chat # Kafka 토픽 이름
+  consumer:
+    group-id: chat-group
+    auto-offset-reset: earliest # 처음 시작할 때 오프셋을 처음부터 읽도록 설정
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+logging:
+  level:
+    org.apache.kafka.clients.producer.ProducerConfig: WARN
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
