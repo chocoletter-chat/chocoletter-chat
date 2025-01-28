@@ -1,4 +1,4 @@
-package chocoletter.chat.chat.dto;
+package chocoletter.chat.api.chat.dto;
 
 import lombok.Getter;
 

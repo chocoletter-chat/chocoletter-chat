@@ -1,4 +1,4 @@
-package chocoletter.chat.chat.domain;
+package chocoletter.chat.api.chat.domain;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
