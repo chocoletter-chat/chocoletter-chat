@@ -25,10 +25,9 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-
-        // Batch Listener 활성화
-        factory.setBatchListener(true);
-
+        factory.setBatchListener(false); // 메시지 하나씩 처리
+        // Consumer를 5개로 늘리기
+        factory.setConcurrency(5);
         return factory;
     }
 
