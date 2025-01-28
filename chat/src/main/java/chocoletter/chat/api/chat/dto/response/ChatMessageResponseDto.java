@@ -1,4 +1,8 @@
 package chocoletter.chat.api.chat.dto.response;
 
-public class ChatMessageResponseDto {
+
+import lombok.Builder;
+
+@Builder
+public record ChatMessageResponseDto(Long senderId, String content, String createdAt, Boolean read) {
 }
