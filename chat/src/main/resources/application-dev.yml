@@ -5,3 +5,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://mongodb:27017/chatdb
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: chat-group
