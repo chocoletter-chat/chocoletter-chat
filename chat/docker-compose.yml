@@ -19,8 +19,48 @@ services:
       - "8080:8080" # 애플리케이션 포트 매핑
     environment:
       - SPRING_PROFILES_ACTIVE=dev # Spring Boot 프로필 설정
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - mongodb # MongoDB 컨테이너가 먼저 실행되도록 설정
+      - kafka
+    networks:
+      - app-network
+
+  zookeeper:
+    # 사용할 이미지
+    image: bitnami/zookeeper:latest
+    # 컨테이너명 설정
+    container_name: zookeeper
+    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes  # 익명 접속 허용 -> 테스트 환경에서만
+      - ZOO_4LW_COMMANDS_WHITELIST=ruok,stat,conf,isro  # 필요한 명령어 추가
+    ports:
+      - "2181:2181"
+    networks:
+      - app-network
+
+  # 서비스 명
+  kafka:
+    # 사용할 이미지
+    image: bitnami/kafka:latest
+    # 컨테이너명 설정
+    container_name: kafka
+    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    ports:
+      - "9092:9092"
+    # 환경 변수 설정
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka  # Kafka 브로커의 호스트 이름
+#      bitnami/kafka 이미지는 KAFKA_CREATE_TOPICS 환경 변수를 기본적으로 지원 안함
+#      KAFKA_CREATE_TOPICS: "chat:10:3"    # 초기 토픽 생성 (토픽:파티션개수:복제본개수)
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Zookeeper 연결 정보
+    # 볼륨 설정
+    volumes:
+      - /var/run/docker.sock
+    # 의존 관계 설정
+    depends_on:
+      - zookeeper
     networks:
       - app-network
 
@@ -28,4 +68,4 @@ volumes:
   mongodb-data: # MongoDB 데이터 영구 저장소
 
 networks:
-  app-network: # 두 컨테이너가 사용할 네트워크
+  app-network:
