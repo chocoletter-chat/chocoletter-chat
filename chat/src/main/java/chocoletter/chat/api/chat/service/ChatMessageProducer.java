@@ -11,6 +11,7 @@ public class ChatMessageProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String roomId, String message) {
+        System.out.println(roomId + " " + message);
         kafkaTemplate.send("chat", roomId, message); // Key로 roomId 설정
     }
 }
