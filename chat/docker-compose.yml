@@ -11,21 +11,21 @@ services:
     networks:
       - app-network
 
-  spring-boot-app:
-    build:
-      context: . # 현재 디렉터리의 Dockerfile 사용
-    container_name: spring-boot-app
-    ports:
-      - "8080:8080" # 애플리케이션 포트 매핑
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev # Spring Boot 프로필 설정
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092 # Kafka 브로커 연결 설정
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/chatdb # MongoDB 연결 설정
-    depends_on:
-      - mongodb # MongoDB 컨테이너가 먼저 실행되도록 설정
-      - kafka
-    networks:
-      - app-network
+#  spring-boot-app:
+#    build:
+#      context: . # 현재 디렉터리의 Dockerfile 사용
+#    container_name: spring-boot-app
+#    ports:
+#      - "8080:8080" # 애플리케이션 포트 매핑
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev # Spring Boot 프로필 설정
+#      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092 # Kafka 브로커 연결 설정
+#      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/chatdb # MongoDB 연결 설정
+#    depends_on:
+#      - mongodb # MongoDB 컨테이너가 먼저 실행되도록 설정
+#      - kafka
+#    networks:
+#      - app-network
 
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -54,8 +54,6 @@ services:
       - zookeeper
     networks:
       - app-network
-    volumes:
-      - /home/ec2-user/kafka-data:/bitnami/kafka
     entrypoint: ["/bin/sh", "-c", "
       /opt/bitnami/kafka/bin/kafka-server-start.sh /opt/bitnami/kafka/config/server.properties &
       sleep 10 &&
