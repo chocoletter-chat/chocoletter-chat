@@ -44,11 +44,9 @@ jobs:
 
           # Docker Compose 실행
           cd ./chat
-          echo "🛑 기존 컨테이너 중지"
-          sudo docker compose down
 
-          echo "🔄 컨테이너 업데이트 및 재시작"
-          sudo docker compose up -d --build
+          echo "🔄 스프링 컨테이너 업데이트 및 재시작"
+          sudo docker compose up -d spring-boot-app
 
           echo "✅ 배포 완료!"
         EOF
