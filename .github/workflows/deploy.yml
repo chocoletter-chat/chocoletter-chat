@@ -30,7 +30,7 @@ jobs:
           # 변경 사항 가져오기
           git clone https://github.com/chocoletter-chat/chocoletter-chat.git
 
-          cd ./chocoletter-chat
+          cd ./chocoletter-chat/chat
           
           # Docker Compose 실행
           sudo docker compose down
