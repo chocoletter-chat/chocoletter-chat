@@ -23,16 +23,32 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          # 프로젝트 디렉토리로 이동
-          cd /home/ubuntu
+        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash -s' << 'EOF'
+          set -e  # 오류 발생 시 스크립트 중단
 
-          # 변경 사항 가져오기
-          git clone https://github.com/chocoletter-chat/chocoletter-chat.git
+          echo "🚀 배포 시작"
 
-          cd ./chocoletter-chat/chat
-          
+          # 프로젝트 디렉토리로 이동 또는 클론
+          cd /home/ubuntu || exit 1
+
+          if [ -d "/home/ubuntu/chocoletter-chat" ]; then
+            echo "📦 기존 프로젝트 발견 - 최신 코드 가져오기"
+            cd /home/ubuntu/chocoletter-chat
+            git reset --hard origin/main  # 변경된 파일 초기화
+            git pull origin main
+          else
+            echo "📦 프로젝트가 없어서 새로 클론"
+            git clone https://github.com/chocoletter-chat/chocoletter-chat.git
+            cd chocoletter-chat
+          fi
+
           # Docker Compose 실행
+          cd ./chat
+          echo "🛑 기존 컨테이너 중지"
           sudo docker compose down
+
+          echo "🔄 컨테이너 업데이트 및 재시작"
           sudo docker compose up -d --build
+
+          echo "✅ 배포 완료!"
         EOF
