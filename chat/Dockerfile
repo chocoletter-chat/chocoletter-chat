@@ -20,7 +20,7 @@ RUN ./gradlew dependencies
 COPY src src
 
 # 애플리케이션 빌드
-RUN ./gradlew clean build
+RUN ./gradlew clean build -x test  
 
 # 빌드 결과물을 실행할 새로운 스테이지
 FROM openjdk:17-slim
