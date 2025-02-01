@@ -39,20 +39,23 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e  # 오류 발생 시 스크립트 중단
+            
+            # 기존 파일이 있으면 삭제
+            rm -f ./.env
 
             echo "🚀 .env 파일 생성 중..."
+            touch ./.env
 
-            cat > /home/ubuntu/chocoletter-chat/.env <<EOL
-SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}
-SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
-TOPIC_NAME=${{ secrets.TOPIC_NAME }}
-CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}
-KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}
-KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}
-KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}
-KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}
-EOL
+            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
+            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
+            echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> ./.env
+            echo "CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}" >> ./.env
+            echo "KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}" >> ./.env
+            echo "KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}" >> ./.env
+            echo "KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}" >> ./.env
+            echo "KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}" >> ./.env
 
+            chmod 600 ./.env
             echo "✅ .env 파일 생성 완료!"
           EOF
 
@@ -83,8 +86,8 @@ EOL
             echo "🛑 기존 컨테이너 중지 및 삭제"
             sudo docker-compose down
           
-            echo "🔄 최신 컨테이너 빌드 및 실행"
-            sudo docker-compose up --build -d
+            echo "🔄 최신 스프링 컨테이너 빌드 및 실행"
+            sudo docker-compose up -d spring-boot-app
           
             echo "✅ 배포 완료!"
           EOF
