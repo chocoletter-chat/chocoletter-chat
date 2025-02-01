@@ -18,7 +18,7 @@ public class ChatMessageConsumer {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
-    @KafkaListener(topics = "${kafka.topic.chat}", groupId = "${kafka.consumer.group-id}")
+    @KafkaListener(topics = "${spring.kafka.topic.chat}", groupId = "${spring.kafka.consumer.group-id}")
     public void consumeMessage(String message) {
         // 메시지를 WebSocket으로 전송
         ChatMessageRequestDto chatMessageRequestDto = parseMessage(message);

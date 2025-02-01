@@ -1,0 +1,108 @@
+name: DEV CD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Docker build 가능하도록 환경 설정
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Debug Secrets (Masked)
+        run: |
+          echo "🔍 Debugging Secrets (Masked)"
+          echo "SPRING_DATA_MONGODB_URI=***"
+          echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=***"
+          echo "SPRING_KAFKA_TOPIC_NAME=***"
+          echo "SPRING_KAFKA_CONSUMER_GROUP_ID=***"
+          echo "KAFKA_BROKER_ID=***"
+          echo "KAFKA_LISTENERS=***"
+          echo "KAFKA_ADVERTISED_LISTENERS=***"
+          echo "KAFKA_ZOOKEEPER_CONNECT=***"
+
+      - name: Create .env file on EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # 오류 발생 시 스크립트 중단
+          
+            cd /home/ubuntu/chocoletter-chat/chat
+            
+            # 기존 파일이 있으면 삭제
+            rm -f ./.env
+
+            echo "🚀 .env 파일 생성 중..."
+            touch ./.env
+
+            echo "KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}" >> ./.env
+            echo "KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}" >> ./.env
+            echo "KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}" >> ./.env
+            echo "KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}" >> ./.env
+
+            chmod 600 ./.env
+          
+            # resources 안에도 세팅
+            cd /home/ubuntu/chocoletter-chat/chat/src/main/resources
+            
+            # 기존 파일이 있으면 삭제
+            rm -f ./.application-secret.properties
+
+            echo "🚀 .properties 파일 생성 중..."
+            touch ./application-secret.properties
+  
+            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./application-secret.properties
+            
+          
+            echo "✅ 환경 변수 파일 생성 완료!"
+      
+          EOF
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # 오류 발생 시 스크립트 중단
+          
+            echo "🚀 배포 시작"
+          
+            # 프로젝트 디렉토리 이동 또는 클론
+            cd /home/ubuntu || exit 1
+          
+            if [ -d "/home/ubuntu/chocoletter-chat" ]; then
+              echo "📦 기존 프로젝트 발견 - 최신 코드 가져오기"
+              cd /home/ubuntu/chocoletter-chat
+              git reset --hard origin/main  # 변경된 파일 초기화
+              git pull origin main
+            else
+              echo "📦 프로젝트가 없어서 새로 클론"
+              git clone https://github.com/chocoletter-chat/chocoletter-chat.git
+              cd chocoletter-chat
+            fi
+          
+            # Docker Compose 실행
+            cd ./chat
+          
+            echo "🛑 기존 스프링 컨테이너 중지 및 삭제"
+            sudo docker-compose stop spring-boot-app
+          
+            echo "🔄 최신 스프링 컨테이너 빌드 및 실행"
+            sudo docker-compose up -d spring-boot-app
+          
+            echo "✅ 배포 완료!"
+          EOF

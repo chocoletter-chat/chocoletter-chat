@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      working-directory: chat  # chat 디렉토리를 기준으로 실행
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3  # GitHub에서 미리 제공하는 checkout action 사용
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle.properties') }}
+
+      - name: Debug directory structure
+        run: |
+          pwd
+          ls -R
+        working-directory: ${{ env.working-directory }}
+
+      - name: Create .properties from secret
+        run: |
+          touch src/main/resources/application-secret.properties
+
+          echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> src/main/resources/application-secret.properties
+          echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> src/main/resources/application-secret.properties
+          echo "TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> src/main/resources/application-secret.properties
+          echo "CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> src/main/resources/application-secret.properties
+          
+          echo "✅ properties 파일 생성 완료"
+        working-directory: ${{ env.working-directory }}
+
+      - name: Build
+        run: |
+          chmod +x gradlew
+          ./gradlew build -x test
+        working-directory: ${{ env.working-directory }}
