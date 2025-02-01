@@ -25,14 +25,16 @@ public class ChatMessageConsumer {
         String topic = "/topic/" + chatMessageRequestDto.getRoomId();
         messagingTemplate.convertAndSend(topic, ChatMessageResponseDto.builder()
                 .senderId(chatMessageRequestDto.getSenderId())
+                .senderName(chatMessageRequestDto.getSenderName())
                 .content(chatMessageRequestDto.getContent())
-                .read(false)
+                .isRead(false)
                 .createdAt(String.valueOf(LocalDateTime.now()))
                 .build());
 
         // MongoDB에 메시지 저장
         chatMessageService.saveChatMessage(ChatMessage.builder()
                 .senderId(chatMessageRequestDto.getSenderId())
+                .senderName(chatMessageRequestDto.getSenderName())
                 .roomId(chatMessageRequestDto.getRoomId())
                 .content(chatMessageRequestDto.getContent())
                 .build());
