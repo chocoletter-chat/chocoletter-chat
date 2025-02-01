@@ -39,23 +39,25 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e  # 오류 발생 시 스크립트 중단
+          
+            cd ./chat
             
             # 기존 파일이 있으면 삭제
-            rm -f ./chat/.env
+            rm -f ./.env
 
             echo "🚀 .env 파일 생성 중..."
-            touch ./chat/.env
+            touch ./.env
 
-            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./chat/.env
-            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./chat/.env
-            echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> ./chat/.env
-            echo "CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}" >> ./chat/.env
-            echo "KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}" >> ./chat/.env
-            echo "KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}" >> ./chat/.env
-            echo "KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}" >> ./chat/.env
-            echo "KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}" >> ./chat/.env
+            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
+            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
+            echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> ./.env
+            echo "CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}" >> ./.env
+            echo "KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}" >> ./.env
+            echo "KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}" >> ./.env
+            echo "KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}" >> ./.env
+            echo "KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}" >> ./.env
 
-            chmod 600 ./chat/.env
+            chmod 600 ./.env
             echo "✅ .env 파일 생성 완료!"
           EOF
 
