@@ -34,16 +34,16 @@ jobs:
           ls -R
         working-directory: ${{ env.working-directory }}
 
-      - name: Create .env from secret
+      - name: Create .properties from secret
         run: |
-          touch src/main/resources/.env 
+          touch src/main/resources/application-secret.properties
 
-          echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> src/main/resources/.env
-          echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> src/main/resources/.env
-          echo "TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> src/main/resources/.env
-          echo "CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> src/main/resources/.env
+          echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> src/main/resources/application-secret.properties
+          echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> src/main/resources/application-secret.properties
+          echo "TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> src/main/resources/application-secret.properties
+          echo "CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> src/main/resources/application-secret.properties
           
-          echo "✅ .env 파일 생성 완료"
+          echo "✅ properties 파일 생성 완료"
         working-directory: ${{ env.working-directory }}
 
       - name: Build

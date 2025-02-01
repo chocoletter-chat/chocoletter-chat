@@ -2,7 +2,6 @@ spring:
   config:
     activate:
       on-profile: dev
-    import: optional:file:.env[.properties]
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}

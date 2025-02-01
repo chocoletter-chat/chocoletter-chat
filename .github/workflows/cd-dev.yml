@@ -29,8 +29,8 @@ jobs:
           echo "SPRING_DATA_MONGODB_URI=***"
           echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=***"
           echo "SPRING_KAFKA_TOPIC_NAME=***"
-          echo "CONSUMER_GROUP_ID=***"
           echo "SPRING_KAFKA_CONSUMER_GROUP_ID=***"
+          echo "KAFKA_BROKER_ID=***"
           echo "KAFKA_LISTENERS=***"
           echo "KAFKA_ADVERTISED_LISTENERS=***"
           echo "KAFKA_ZOOKEEPER_CONNECT=***"
@@ -59,17 +59,18 @@ jobs:
             cd /home/ubuntu/chocoletter-chat/chat/src/main/resources
             
             # 기존 파일이 있으면 삭제
-            rm -f ./.env
+            rm -f ./.application-secret.properties
 
-            echo "🚀 .env 파일 생성 중..."
-            touch ./.env
-
-            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
-            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
-            echo "SPRING_KAFKA_TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./.env
-            echo "SPRING_KAFKA_CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./.env
-
-            echo "✅ .env 파일 생성 완료!"
+            echo "🚀 .properties 파일 생성 중..."
+            touch ./application-secret.properties
+  
+            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./application-secret.properties
+            echo "SPRING_KAFKA_CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./application-secret.properties
+            
+          
+            echo "✅ 환경 변수 파일 생성 완료!"
       
           EOF
 
