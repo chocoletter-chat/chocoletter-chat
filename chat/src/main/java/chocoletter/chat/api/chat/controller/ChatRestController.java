@@ -1,6 +1,7 @@
 package chocoletter.chat.api.chat.controller;
 
 import chocoletter.chat.api.chat.dto.response.ChatMessagesResponseDto;
+import chocoletter.chat.api.chat.dto.response.LastChatMessageResponseDto;
 import chocoletter.chat.api.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,12 @@ public class ChatRestController {
                                               @RequestParam(defaultValue = "20") Integer size) {
         ChatMessagesResponseDto chatMessages = chatMessageService.findChatMessages(roomId, page, size);
         return ResponseEntity.ok(chatMessages);
+    }
+
+    @GetMapping("/{roomId}/{memberId}/last")
+    public ResponseEntity<?> findLastChatMessage(@PathVariable("roomId") String roomId,
+                                                 @PathVariable("memberId") Long memberId) {
+        LastChatMessageResponseDto lastChatMessage = chatMessageService.findLastChatMessage(roomId, memberId);
+        return ResponseEntity.ok(lastChatMessage);
     }
 }

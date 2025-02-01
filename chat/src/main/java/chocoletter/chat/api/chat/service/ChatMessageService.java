@@ -3,6 +3,7 @@ package chocoletter.chat.api.chat.service;
 import chocoletter.chat.api.chat.domain.ChatMessage;
 import chocoletter.chat.api.chat.dto.response.ChatMessageResponseDto;
 import chocoletter.chat.api.chat.dto.response.ChatMessagesResponseDto;
+import chocoletter.chat.api.chat.dto.response.LastChatMessageResponseDto;
 import chocoletter.chat.api.chat.repository.ChatMessageRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +29,9 @@ public class ChatMessageService {
                 .toList();
         return ChatMessagesResponseDto.of(chatMessages);
 
+    }
+
+    public LastChatMessageResponseDto findLastChatMessage(String roomId, Long memberId) {
+        return chatMessageRepository.findUnReadCountAndLastMessage(roomId, memberId);
     }
 }
