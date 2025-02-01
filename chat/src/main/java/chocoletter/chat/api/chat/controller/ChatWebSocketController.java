@@ -1,23 +1,16 @@
 package chocoletter.chat.api.chat.controller;
 
-import chocoletter.chat.api.chat.domain.ChatMessage;
 import chocoletter.chat.api.chat.dto.request.ChatMessageRequestDto;
-import chocoletter.chat.api.chat.dto.response.ChatMessageResponseDto;
-import chocoletter.chat.api.chat.repository.ChatMessageRepository;
 import chocoletter.chat.api.chat.service.ChatMessageProducer;
-import chocoletter.chat.api.chat.service.ChatMessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatWebSocketController {
 
     private final ChatMessageProducer chatMessageProducer;
 
