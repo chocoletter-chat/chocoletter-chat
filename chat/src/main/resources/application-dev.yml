@@ -11,7 +11,7 @@ spring:
     topic:
       chat: ${SPRING_KAFKA_TOPIC_NAME}
     consumer:
-      group-id: ${PRING_KAFKA_CONSUMER_GROUP_ID}
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
       auto-offset-reset: earliest # 처음 시작할 때 오프셋을 처음부터 읽도록 설정
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
