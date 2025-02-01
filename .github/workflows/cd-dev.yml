@@ -45,9 +45,18 @@ jobs:
               cd chocoletter-chat
             fi
           
-            # `.env` 파일 한 번에 생성
-            echo '${{ secrets.ENV_VARS }}' | jq -r 'to_entries | map("\(.key)=\(.value)") | .[]' > .env
-          
+            # `.env` 파일 생성
+            cat > .env <<EOL
+            SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}
+            SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
+            TOPIC_NAME=${{ secrets.TOPIC_NAME }}
+            CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}
+            KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}
+            KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}
+            KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}
+            KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}
+            EOL
+  
             echo "✅ .env 파일 생성 완료!"
           
             # Docker Compose 실행
