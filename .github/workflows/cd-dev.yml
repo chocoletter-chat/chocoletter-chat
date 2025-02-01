@@ -25,48 +25,56 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
+        env:
+          MONGODB_URI: ${{ secrets.SPRING_DATA_MONGODB_URI }}
+          KAFKA_SERVERS: ${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
+          TOPIC: ${{ secrets.TOPIC_NAME }}
+          GROUP_ID: ${{ secrets.CONSUMER_GROUP_ID }}
+          BROKER_ID: ${{ secrets.KAFKA_BROKER_ID }}
+          LISTENERS: ${{ secrets.KAFKA_LISTENERS }}
+          ADV_LISTENERS: ${{ secrets.KAFKA_ADVERTISED_LISTENERS }}
+          ZOOKEEPER: ${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash -s' << 'EOF'
-            set -e  # 오류 발생 시 스크립트 중단
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash -s" << 'EOL'
+          set -e
           
-            echo "🚀 배포 시작"
+          echo "🚀 배포 시작"
           
-            # 프로젝트 디렉토리 이동 또는 클론
-            cd /home/ubuntu || exit 1
+          cd /home/ubuntu || exit 1
           
-            if [ -d "/home/ubuntu/chocoletter-chat" ]; then
-              echo "📦 기존 프로젝트 발견 - 최신 코드 가져오기"
-              cd /home/ubuntu/chocoletter-chat
-              git reset --hard origin/main  # 변경된 파일 초기화
-              git pull origin main
-            else
-              echo "📦 프로젝트가 없어서 새로 클론"
-              git clone https://github.com/chocoletter-chat/chocoletter-chat.git
-              cd chocoletter-chat
-            fi
+          if [ -d "/home/ubuntu/chocoletter-chat" ]; then
+            echo "📦 기존 프로젝트 발견 - 최신 코드 가져오기"
+            cd /home/ubuntu/chocoletter-chat
+            git reset --hard origin/main
+            git pull origin main
+          else
+            echo "📦 프로젝트가 없어서 새로 클론"
+            git clone https://github.com/chocoletter-chat/chocoletter-chat.git
+            cd chocoletter-chat
+          fi
+          EOL
           
-            # `.env` 파일 생성
-            cat > .env <<EOL
-            SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}
-            SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
-            TOPIC_NAME=${{ secrets.TOPIC_NAME }}
-            CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}
-            KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}
-            KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}
-            KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}
-            KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}
-            EOL
+          # env 파일 생성을 별도의 SSH 명령으로 실행
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "cat > /home/ubuntu/chocoletter-chat/.env" << 'EOL'
+  SPRING_DATA_MONGODB_URI='${MONGODB_URI}'
+  SPRING_KAFKA_BOOTSTRAP_SERVERS='${KAFKA_SERVERS}'
+  TOPIC_NAME='${TOPIC}'
+  CONSUMER_GROUP_ID='${GROUP_ID}'
+  KAFKA_BROKER_ID='${BROKER_ID}'
+  KAFKA_LISTENERS='${LISTENERS}'
+  KAFKA_ADVERTISED_LISTENERS='${ADV_LISTENERS}'
+  KAFKA_ZOOKEEPER_CONNECT='${ZOOKEEPER}'
+  EOL
   
-            echo "✅ .env 파일 생성 완료!"
-          
-            # Docker Compose 실행
-            cd ./chat
-          
-            echo "🛑 기존 컨테이너 중지 및 삭제"
-            sudo docker-compose down
-          
-            echo "🔄 최신 컨테이너 빌드 및 실행"
-            sudo docker-compose up -d spring-boot-app
-          
-            echo "✅ 배포 완료!"
-          EOF
+  # Docker Compose 실행을 위한 마지막 SSH 명령
+  ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash -s" << 'EOL'
+  cd /home/ubuntu/chocoletter-chat/chat
+  
+  echo "🛑 기존 컨테이너 중지 및 삭제"
+  sudo docker-compose down
+  
+  echo "🔄 최신 컨테이너 빌드 및 실행"
+  sudo docker-compose up -d spring-boot-app
+  
+  echo "✅ 배포 완료!"
+  EOL
