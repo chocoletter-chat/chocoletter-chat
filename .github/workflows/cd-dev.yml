@@ -66,8 +66,8 @@ jobs:
 
             echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
             echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
-            echo "TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./.env
-            echo "CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./.env
+            echo "SPRING_KAFKA_TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./.env
+            echo "SPRING_KAFKA_CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./.env
 
             echo "✅ .env 파일 생성 완료!"
       
