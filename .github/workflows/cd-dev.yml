@@ -48,17 +48,29 @@ jobs:
             echo "🚀 .env 파일 생성 중..."
             touch ./.env
 
-            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
-            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
-            echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> ./.env
-            echo "CONSUMER_GROUP_ID=${{ secrets.CONSUMER_GROUP_ID }}" >> ./.env
             echo "KAFKA_BROKER_ID=${{ secrets.KAFKA_BROKER_ID }}" >> ./.env
             echo "KAFKA_LISTENERS=${{ secrets.KAFKA_LISTENERS }}" >> ./.env
             echo "KAFKA_ADVERTISED_LISTENERS=${{ secrets.KAFKA_ADVERTISED_LISTENERS }}" >> ./.env
             echo "KAFKA_ZOOKEEPER_CONNECT=${{ secrets.KAFKA_ZOOKEEPER_CONNECT }}" >> ./.env
 
             chmod 600 ./.env
+          
+            # resources 안에도 세팅
+            cd /home/ubuntu/chocoletter-chat/chat/src/main/resources
+            
+            # 기존 파일이 있으면 삭제
+            rm -f ./.env
+
+            echo "🚀 .env 파일 생성 중..."
+            touch ./.env
+
+            echo "SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }}" >> ./.env
+            echo "SPRING_KAFKA_BOOTSTRAP_SERVERS=${{ secrets.SPRING_KAFKA_BOOTSTRAP_SERVERS }}" >> ./.env
+            echo "TOPIC_NAME=${{ secrets.SPRING_KAFKA_TOPIC_NAME }}" >> ./.env
+            echo "CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./.env
+
             echo "✅ .env 파일 생성 완료!"
+      
           EOF
 
       - name: Deploy to EC2

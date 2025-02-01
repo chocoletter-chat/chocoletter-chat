@@ -2,15 +2,21 @@ spring:
   config:
     activate:
       on-profile: dev
-
-kafka:
-  consumer:
-    auto-offset-reset: earliest # 처음 시작할 때 오프셋을 처음부터 읽도록 설정
-  producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-logging:
-  level:
-    org.apache.kafka.clients.producer.ProducerConfig: WARN
-    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    import: optional:file:.env[.properties]
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    topic:
+      chat: ${SPRING_KAFKA_TOPIC_NAME}
+    consumer:
+      group-id: ${PRING_KAFKA_CONSUMER_GROUP_ID}
+      auto-offset-reset: earliest # 처음 시작할 때 오프셋을 처음부터 읽도록 설정
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    logging:
+      level:
+        org.apache.kafka.clients.producer.ProducerConfig: WARN
+        org.apache.kafka.clients.consumer.ConsumerConfig: WARN
