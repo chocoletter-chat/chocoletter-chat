@@ -15,16 +15,18 @@ public class ChatMessage {
     private String id;
     private String roomId;
     private Long senderId;
+    private String senderName;
     private String content;
     private LocalDateTime createdAt;
-    private Boolean read;
+    private Boolean isRead;
 
     @Builder
-    public ChatMessage(String roomId, Long senderId, String content) {
+    public ChatMessage(String roomId, Long senderId, String senderName, String content) {
         this.roomId = roomId;
         this.senderId = senderId;
+        this.senderName = senderName;
         this.content = content;
         this.createdAt = LocalDateTime.now();
-        this.read = false;
+        this.isRead = false;
     }
 }
