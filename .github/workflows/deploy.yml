@@ -46,7 +46,7 @@ jobs:
           cd ./chat
 
           echo "🔄 스프링 컨테이너 업데이트 및 재시작"
-          sudo docker compose up -d spring-boot-app
+          sudo docker-compose up -d spring-boot-app
 
           echo "✅ 배포 완료!"
         EOF
