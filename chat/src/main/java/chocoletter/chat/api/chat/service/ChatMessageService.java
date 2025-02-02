@@ -1,6 +1,7 @@
 package chocoletter.chat.api.chat.service;
 
 import chocoletter.chat.api.chat.domain.ChatMessage;
+import chocoletter.chat.api.chat.domain.MessageType;
 import chocoletter.chat.api.chat.dto.response.ChatMessageResponseDto;
 import chocoletter.chat.api.chat.dto.response.ChatMessagesResponseDto;
 import chocoletter.chat.api.chat.dto.response.LastChatMessageResponseDto;
@@ -25,11 +26,11 @@ public class ChatMessageService {
         Pageable pageable = PageRequest.of(page, size);
         List<ChatMessageResponseDto> chatMessages = chatMessageRepository.findChatMessages(roomId, pageable)
                 .stream()
-                .map(ChatMessageResponseDto::of)
+                .map(chatMessage -> ChatMessageResponseDto.of(MessageType.CHAT, chatMessage))
                 .toList();
         return ChatMessagesResponseDto.of(chatMessages);
-
     }
+
 
     public LastChatMessageResponseDto findLastChatMessage(String roomId, Long memberId) {
         return chatMessageRepository.findUnReadCountAndLastMessage(roomId, memberId);
