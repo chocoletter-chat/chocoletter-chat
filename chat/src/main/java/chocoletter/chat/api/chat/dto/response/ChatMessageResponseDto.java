@@ -6,11 +6,12 @@ import chocoletter.chat.api.chat.domain.MessageType;
 import lombok.Builder;
 
 @Builder
-public record ChatMessageResponseDto(MessageType messageType, Long senderId, String senderName,
+public record ChatMessageResponseDto(MessageType messageType, String roomId, String senderId, String senderName,
                                      String content, String createdAt, Boolean isRead) {
     public static ChatMessageResponseDto of(MessageType messageType, ChatMessage chatMessage) {
         return ChatMessageResponseDto.builder()
                 .messageType(messageType)
+                .roomId(chatMessage.getRoomId())
                 .senderId(chatMessage.getSenderId())
                 .senderName(chatMessage.getSenderName())
                 .content(chatMessage.getContent())
