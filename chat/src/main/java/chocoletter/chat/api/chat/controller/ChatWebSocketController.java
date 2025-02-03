@@ -2,6 +2,8 @@ package chocoletter.chat.api.chat.controller;
 
 import chocoletter.chat.api.chat.dto.request.ChatMessageRequestDto;
 import chocoletter.chat.api.chat.service.ChatMessageProducer;
+import chocoletter.chat.common.exception.ErrorMessage;
+import chocoletter.chat.common.exception.InternalServerException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ public class ChatWebSocketController {
             String message = objectMapper.writeValueAsString(chatMessageRequestDto);
             chatMessageProducer.sendMessage(chatMessageRequestDto.getRoomId(), message); // Kafka topic으로 전송
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize message", e);
+            throw new InternalServerException(ErrorMessage.ERR_SERIALIZE_MESSAGE);
         }
     }
 }
