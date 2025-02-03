@@ -14,19 +14,19 @@ public class ChatMessage {
     @Id
     private String id;
     private String roomId;
-    private Long senderId;
+    private String senderId;
     private String senderName;
     private String content;
     private LocalDateTime createdAt;
     private Boolean isRead;
 
     @Builder
-    public ChatMessage(String roomId, Long senderId, String senderName, String content) {
+    public ChatMessage(String roomId, String senderId, String senderName, String content, Boolean isRead) {
         this.roomId = roomId;
         this.senderId = senderId;
         this.senderName = senderName;
         this.content = content;
         this.createdAt = LocalDateTime.now();
-        this.isRead = false;
+        this.isRead = isRead;
     }
 }
