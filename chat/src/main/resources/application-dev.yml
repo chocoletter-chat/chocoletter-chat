@@ -19,3 +19,9 @@ spring:
       level:
         org.apache.kafka.clients.producer.ProducerConfig: WARN
         org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+
+jwt:
+  secret: ${SPRING_JWT_SECRET}
+
+encrypt:
+  secret-key: ${SPRING_ENCRYPT_SECRET_KEY}
