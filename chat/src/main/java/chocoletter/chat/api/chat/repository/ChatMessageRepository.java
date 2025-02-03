@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,5 +21,9 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
                     "count: { $sum: { $cond: [{ $and: [ { $ne: ['$senderId', ?1] }, { $eq: ['$isRead', false] } ] }, 1, 0] } }, " +
                     "message: { $last: '$content' } } }"
     })
-    LastChatMessageResponseDto findUnReadCountAndLastMessage(String roomId, Long memberId);
+    LastChatMessageResponseDto findUnReadCountAndLastMessage(String roomId, String memberId);
+
+    @Query("{ 'roomId': ?0}")
+    @Update("{ '$set': { 'isRead': true } }")
+    void readAllUnreadMessages(String roomId);
 }
