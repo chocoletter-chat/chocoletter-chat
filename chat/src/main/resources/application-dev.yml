@@ -2,6 +2,7 @@ spring:
   config:
     activate:
       on-profile: dev
+    import: application-secret.properties
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}

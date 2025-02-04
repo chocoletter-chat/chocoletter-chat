@@ -45,7 +45,7 @@ jobs:
             cd /home/ubuntu/chocoletter-chat/chat
             
             # 기존 파일이 있으면 삭제
-            rm -f ./.env
+            rm -rf ./.env
 
             echo "🚀 .env 파일 생성 중..."
             touch ./.env
@@ -61,7 +61,7 @@ jobs:
             cd /home/ubuntu/chocoletter-chat/chat/src/main/resources
             
             # 기존 파일이 있으면 삭제
-            rm -f ./.application-secret.properties
+            rm -rf ./application-secret.properties
 
             echo "🚀 .properties 파일 생성 중..."
             touch ./application-secret.properties
@@ -72,7 +72,6 @@ jobs:
             echo "SPRING_KAFKA_CONSUMER_GROUP_ID=${{ secrets.SPRING_KAFKA_CONSUMER_GROUP_ID }}" >> ./application-secret.properties
             echo "SPRING_ENCRYPT_SECRET_KEY=${{ secrets.SPRING_ENCRYPT_SECRET_KEY }}" >> ./application-secret.properties
             echo "SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}" >> ./application-secret.properties
-            
           
             echo "✅ 환경 변수 파일 생성 완료!"
       
