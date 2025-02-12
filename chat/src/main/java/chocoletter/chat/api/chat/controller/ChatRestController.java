@@ -23,7 +23,7 @@ public class ChatRestController {
     @GetMapping("/{roomId}/all")
     public ResponseEntity<?> findChatMessages(@PathVariable("roomId") String roomId,
                                               @RequestParam(defaultValue = "0") Integer page,
-                                              @RequestParam(defaultValue = "20") Integer size) {
+                                              @RequestParam(defaultValue = "500") Integer size) {
         ChatMessagesResponseDto chatMessages = chatMessageService.findChatMessages(roomId, page, size);
         return ResponseEntity.ok(chatMessages);
     }
