@@ -43,7 +43,6 @@ public class StompInterceptor implements ChannelInterceptor {
         } catch (Exception e) {
             throw new InternalServerException(ErrorMessage.ERR_ENCRYPT_FAIL);
         }
-        System.out.println("memberId in Token: " + memberId);
         log.info("StompAccessor = {}", accessor);
         handleMessage(accessor.getCommand(), accessor, memberId);
         return message;

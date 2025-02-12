@@ -22,9 +22,6 @@ public class InMemoryChatRoomRepository {
     // 채팅방 저장 (입장 내역 추가)
     public void save(String roomId, String memberId) {
         chatRooms.computeIfAbsent(roomId, k -> Collections.newSetFromMap(new ConcurrentHashMap<>())).add(memberId);
-        System.out.println("========== after connect chat room ==========");
-        System.out.println(chatRooms);
-        System.out.println("========== after connect members ==========");
     }
 
     // 채팅방 삭제 (퇴장 시)
@@ -33,9 +30,6 @@ public class InMemoryChatRoomRepository {
             members.remove(memberId);
             return members;
         });
-        System.out.println("========== after remove chat room ==========");
-        System.out.println(chatRooms);
-        System.out.println("========== after remove members ==========");
     }
 }
 
