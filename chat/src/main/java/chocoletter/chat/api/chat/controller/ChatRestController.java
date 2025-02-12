@@ -39,7 +39,7 @@ public class ChatRestController {
     @PostMapping("/{roomId}/{memberId}/disconnect")
     public ResponseEntity<?> disconnectChat(@PathVariable("roomId") String roomId,
                                             @PathVariable("memberId") String memberId) {
-
+        System.out.println("memberId: " + memberId);
         chatRoomService.disconnectChatRoom(roomId, memberId);
         return ResponseEntity.ok().build();
     }
