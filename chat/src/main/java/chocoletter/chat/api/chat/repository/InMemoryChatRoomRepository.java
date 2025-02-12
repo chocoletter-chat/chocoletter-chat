@@ -29,7 +29,10 @@ public class InMemoryChatRoomRepository {
 
     // 채팅방 삭제 (퇴장 시)
     public void remove(String roomId, String memberId) {
-        chatRooms.getOrDefault(roomId, Collections.emptySet()).remove(roomId);
+        chatRooms.computeIfPresent(roomId, (key, members) -> {
+            members.remove(memberId);
+            return members;
+        });
         System.out.println("========== after remove chat room ==========");
         System.out.println(chatRooms);
         System.out.println("========== after remove members ==========");
