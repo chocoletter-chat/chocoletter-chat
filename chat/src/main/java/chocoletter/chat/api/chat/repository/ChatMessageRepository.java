@@ -23,7 +23,7 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     })
     LastChatMessageResponseDto findUnReadCountAndLastMessage(String roomId, String memberId);
 
-    @Query("{ 'roomId': ?0}")
+    @Query("{ 'roomId': ?0, 'senderId':  {$ne: ?1}}")
     @Update("{ '$set': { 'isRead': true } }")
-    void readAllUnreadMessages(String roomId);
+    void readAllUnreadMessages(String roomId, String memberId);
 }

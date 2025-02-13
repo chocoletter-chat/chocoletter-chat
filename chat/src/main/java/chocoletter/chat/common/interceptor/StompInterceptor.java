@@ -63,7 +63,9 @@ public class StompInterceptor implements ChannelInterceptor {
     private void connectToChatRoom(StompHeaderAccessor accessor, String memberId) {
         String roomId = getChatRoomId(accessor);
         chatRoomService.connectChatRoom(roomId, memberId);
-        chatMessageService.readAllUnreadMessages(roomId);
+        // 읽지 않은 채팅을 전부 읽음 처리
+        chatMessageService.readAllUnreadMessages(roomId, memberId);
+        // 현재 채팅방에 접속중인 인원이 있는지 확인
         boolean isAllConnected = chatRoomService.isAllConnected(roomId);
 
         if (isAllConnected) {

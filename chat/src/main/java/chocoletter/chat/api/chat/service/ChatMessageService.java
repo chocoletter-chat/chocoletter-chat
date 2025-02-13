@@ -44,8 +44,8 @@ public class ChatMessageService {
     }
 
     @Transactional
-    public void readAllUnreadMessages(String roomId) {
-        chatMessageRepository.readAllUnreadMessages(roomId);
+    public void readAllUnreadMessages(String roomId, String memberId) {
+        chatMessageRepository.readAllUnreadMessages(roomId, memberId);
     }
 
     public void noticeReadStatus(String roomId) {
